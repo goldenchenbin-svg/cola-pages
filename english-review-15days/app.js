@@ -115,16 +115,17 @@
     return localDateKey(tomorrow);
   }
 
-  function createCard({ id, sourceDay, type, front, meaning = '', details = [], raw = '' }) {
+  function createCard({ id, sourceDay, type, front, meaning = '', phonetic = '', details = [], raw = '' }) {
     return {
       id,
       sourceDay,
       type,
       front: String(front || '').trim(),
       meaning: String(meaning || '').trim(),
+      phonetic: String(phonetic || '').trim(),
       details: details.map(line => String(line).trim()).filter(Boolean),
       raw,
-      searchText: [front, meaning, ...details, raw].join(' ').toLocaleLowerCase()
+      searchText: [front, meaning, phonetic, ...details, raw].join(' ').toLocaleLowerCase()
     };
   }
 
@@ -170,6 +171,7 @@
       type: '重点词语',
       front: item.term,
       meaning: item.meaning,
+      phonetic: item.phonetic,
       details: item.details,
       raw: item.title
     }));
@@ -348,7 +350,7 @@
         <article class="flashcard${flipped ? ' is-flipped' : ''}">
           <div class="flashcard-top"><span class="card-kind">${escapeHTML(card.type)}</span><div class="flashcard-top-actions"><span class="card-counter">${index + 1} / ${visibleCards.length}</span>${canPronounce ? `<button class="speak-button" type="button" data-speak="${escapeHTML(card.front)}" aria-label="朗读 ${escapeHTML(card.front)}" title="使用设备英语语音朗读" ${speechAvailable ? '' : 'disabled'}><span aria-hidden="true">🔊</span><span>听读</span></button>` : ''}</div></div>
           <button class="flashcard-face" id="flip-card" type="button" aria-expanded="${flipped}">
-            ${flipped ? `<span class="face-label">答案与原文</span>${renderDetails(card)}<span class="flip-hint">点此收起答案</span>` : `<span class="face-label">先回忆，再翻卡</span><strong class="card-front">${escapeHTML(card.front)}</strong><span class="flip-hint">轻触查看答案</span>`}
+            ${flipped ? `<span class="face-label">答案与原文</span>${renderDetails(card)}<span class="flip-hint">点此收起答案</span>` : `<span class="face-label">先回忆，再翻卡</span><strong class="card-front">${escapeHTML(card.front)}</strong>${card.phonetic ? `<span class="card-phonetic" lang="en">${escapeHTML(card.phonetic)}<small>美式 IPA</small></span>` : ''}<span class="flip-hint">轻触查看答案</span>`}
           </button>
           <div class="card-actions${flipped ? ' actions-visible' : ''}">
             <button type="button" class="answer-button again-button" data-answer="again" ${flipped ? '' : 'disabled'}><span>再练</span><small>加入次日错题</small></button>
