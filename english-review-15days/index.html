@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f5f7fb">
+  <meta name="description" content="15 天英语复习课程：词汇、核心短语、万能句型与写作模板，配合间隔复习和翻卡自测。">
+  <title>15-Day English Review</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="data.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#top" aria-label="回到课程首页">
+        <span class="brand-mark" aria-hidden="true">Aa</span>
+        <span><strong>English, every day.</strong><small>15-day review course</small></span>
+      </a>
+      <div class="storage-note"><span class="storage-dot" aria-hidden="true"></span>进度仅保存在本设备</div>
+    </header>
+
+    <main id="top">
+      <section class="intro" aria-labelledby="page-title">
+        <div class="intro-copy">
+          <p class="eyebrow">专升本英语 · 复习计划</p>
+          <h1 id="page-title">每天学一点，记得更久。</h1>
+          <p class="intro-description">把词汇、短语与写作素材拆成 15 天；先学新内容，再按间隔回顾。</p>
+        </div>
+        <div class="overall-progress" aria-live="polite">
+          <div class="progress-heading"><span>课程进度</span><strong id="overall-count">0 / 15 天</strong></div>
+          <div class="progress-track"><span id="overall-bar"></span></div>
+          <p id="overall-caption">开始第一课，建立你的复习节奏。</p>
+        </div>
+      </section>
+
+      <div class="workspace">
+        <aside class="sidebar" aria-label="课程导航与筛选">
+          <div class="side-card day-picker-card">
+            <div class="side-card-heading"><span class="eyebrow">YOUR PLAN</span><span class="day-total">15 天</span></div>
+            <label class="field-label" for="day-select">选择课程</label>
+            <div class="day-select-row">
+              <button class="icon-button" id="prev-day" type="button" aria-label="上一课">‹</button>
+              <select id="day-select" aria-label="选择课程日"></select>
+              <button class="icon-button" id="next-day" type="button" aria-label="下一课">›</button>
+            </div>
+            <div id="day-grid" class="day-grid" aria-label="15 天课程快速导航"></div>
+          </div>
+
+          <div class="side-card filter-card">
+            <label class="field-label" for="search-input">搜索本课内容</label>
+            <div class="search-box"><span aria-hidden="true">⌕</span><input id="search-input" type="search" placeholder="输入英文或中文" autocomplete="off"><button id="clear-search" type="button" aria-label="清除搜索" hidden>×</button></div>
+            <p class="search-hint">搜索会同时筛选复习卡与新课卡。</p>
+          </div>
+
+          <div class="side-card rhythm-card">
+            <span class="eyebrow">SPACED REVIEW</span>
+            <h2>记忆节奏</h2>
+            <p>每课新内容会安排在课后第 <strong>1、3、7 天</strong>复习。</p>
+            <div class="rhythm-example"><span>D1</span><i aria-hidden="true">→</i><span>D2</span><span>D4</span><span>D8</span></div>
+            <p class="tiny-note">答错的卡片会加入次日再练。D15 为全量综合回顾。</p>
+          </div>
+        </aside>
+
+        <section class="lesson-panel" aria-labelledby="lesson-title">
+          <div id="lesson-content" aria-live="polite"></div>
+        </section>
+      </div>
+    </main>
+    <footer class="footer"><span>本地复习工具 · 无账号、无云端同步</span><span id="footer-today"></span></footer>
+  </div>
+  <noscript>此页面需要启用 JavaScript 才能使用翻卡和保存进度。</noscript>
+</body>
+</html>
