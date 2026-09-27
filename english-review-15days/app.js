@@ -313,6 +313,20 @@
     return `<div class="answer-content">${meaning}${details || (!meaning ? '<p class="answer-meaning">查看原文并回忆它的含义。</p>' : '')}</div>`;
   }
 
+  function speakEnglish(text) {
+    if (typeof window.speechSynthesis === 'undefined' || typeof window.SpeechSynthesisUtterance !== 'function') return false;
+    const synthesis = window.speechSynthesis;
+    synthesis.cancel();
+    const utterance = new window.SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-US';
+    utterance.rate = 0.86;
+    const voices = synthesis.getVoices();
+    const voice = voices.find(item => item.lang.toLowerCase() === 'en-us') || voices.find(item => item.lang.toLowerCase().startsWith('en-'));
+    if (voice) utterance.voice = voice;
+    synthesis.speak(utterance);
+    return true;
+  }
+
   function sessionMarkup(kind, cards, day) {
     if (!activeSession || activeSession.kind !== kind || activeSession.day !== day) return '';
     const visibleCards = filtered(activeSession.cards);
@@ -325,12 +339,14 @@
     const flipped = isFlipped;
     const progress = Math.round(((index + (flipped ? 0.5 : 0)) / visibleCards.length) * 100);
     const stats = state.stats[card.id] || { known: 0, again: 0 };
+    const canPronounce = ['重点词语', '核心短语'].includes(card.type);
+    const speechAvailable = typeof window.speechSynthesis !== 'undefined' && typeof window.SpeechSynthesisUtterance === 'function';
     return `
       <div class="session-box" data-session="${kind}">
         <div class="deck-toolbar"><span>${escapeHTML(card.sessionLabel || card.type)}</span><span>${index + 1} / ${visibleCards.length}</span></div>
         <div class="deck-progress"><span style="width:${progress}%"></span></div>
         <article class="flashcard${flipped ? ' is-flipped' : ''}">
-          <div class="flashcard-top"><span class="card-kind">${escapeHTML(card.type)}</span><span class="card-counter">${index + 1} / ${visibleCards.length}</span></div>
+          <div class="flashcard-top"><span class="card-kind">${escapeHTML(card.type)}</span><div class="flashcard-top-actions"><span class="card-counter">${index + 1} / ${visibleCards.length}</span>${canPronounce ? `<button class="speak-button" type="button" data-speak="${escapeHTML(card.front)}" aria-label="朗读 ${escapeHTML(card.front)}" title="使用设备英语语音朗读" ${speechAvailable ? '' : 'disabled'}><span aria-hidden="true">🔊</span><span>听读</span></button>` : ''}</div></div>
           <button class="flashcard-face" id="flip-card" type="button" aria-expanded="${flipped}">
             ${flipped ? `<span class="face-label">答案与原文</span>${renderDetails(card)}<span class="flip-hint">点此收起答案</span>` : `<span class="face-label">先回忆，再翻卡</span><strong class="card-front">${escapeHTML(card.front)}</strong><span class="flip-hint">轻触查看答案</span>`}
           </button>
@@ -490,6 +506,12 @@
       elements.search.focus();
     });
     elements.lessonContent.addEventListener('click', event => {
+      const pronunciationButton = event.target.closest('[data-speak]');
+      if (pronunciationButton) {
+        event.stopPropagation();
+        speakEnglish(pronunciationButton.dataset.speak);
+        return;
+      }
       const startButton = event.target.closest('[data-start]');
       if (startButton) {
         startSession(startButton.dataset.start);
